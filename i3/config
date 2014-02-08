@@ -1,0 +1,180 @@
+#
+# i3 config file
+# author: krvkir
+# created: 2014-02-07
+#
+
+
+set $mod Mod4
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# Font
+    #font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+    #font pango:DejaVu Sans Mono 10
+    font pango:DejaVu Sans Condensed 8
+
+
+########################################
+# Keybindings
+
+# Apps
+    # start dmenu (a program launcher)
+    bindsym $mod+x exec dmenu_run
+
+    # start a terminal
+    bindsym $mod+Return exec i3-sensible-terminal
+
+    # kill focused window
+    bindsym $mod+Shift+q kill
+
+# Frames
+    # change focus
+    bindsym $mod+j focus left
+    bindsym $mod+k focus down
+    bindsym $mod+i focus up
+    bindsym $mod+l focus right
+
+    bindsym $mod+s focus right
+    bindsym $mod+Shift+s focus down
+    
+    # move focused window
+    bindsym $mod+Shift+J move left
+    bindsym $mod+Shift+K move down
+    bindsym $mod+Shift+I move up
+    bindsym $mod+Shift+L move right
+
+    # enter fullscreen mode for the focused container
+    bindsym $mod+F11 fullscreen
+
+# Scratchpad
+    bindsym $mod+space scratchpad show
+    bindsym $mod+Shift+space move scratchpad
+
+# Containers
+    # splits
+    bindsym $mod+Shift+v split h
+    bindsym $mod+v split v
+
+    # layouts
+    bindsym $mod+Shift+b layout stacking
+    bindsym $mod+b layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # toggle tiling / floating
+    bindsym $mod+minus focus mode_toggle
+    bindsym $mod+Shift+minus floating toggle
+    
+    # resize window (you can also use the mouse for that)
+    bindsym $mod+n mode "resize"
+    mode "resize" {
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym i resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+    
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+    }
+
+    # focus the parent container
+    #bindsym $mod+a focus parent
+    # focus the child container
+    #bindsym $mod+d focus child
+
+# Workspaces
+    workspace_auto_back_and_forth yes
+
+    bindsym $mod+1 workspace 1
+    bindsym $mod+2 workspace 2
+    bindsym $mod+3 workspace 3
+    bindsym $mod+4 workspace 4
+    bindsym $mod+5 workspace 5
+    bindsym $mod+6 workspace 6
+    bindsym $mod+7 workspace 7
+    bindsym $mod+8 workspace 8
+    bindsym $mod+9 workspace 9
+    bindsym $mod+0 workspace 10
+    
+    bindsym $mod+Shift+1 move container to workspace 1
+    bindsym $mod+Shift+2 move container to workspace 2
+    bindsym $mod+Shift+3 move container to workspace 3
+    bindsym $mod+Shift+4 move container to workspace 4
+    bindsym $mod+Shift+5 move container to workspace 5
+    bindsym $mod+Shift+6 move container to workspace 6
+    bindsym $mod+Shift+7 move container to workspace 7
+    bindsym $mod+Shift+8 move container to workspace 8
+    bindsym $mod+Shift+9 move container to workspace 9
+    bindsym $mod+Shift+0 move container to workspace 10
+    
+    bindsym $mod+Tab workspace back_and_forth
+    bindsym $mod+p workspace back_and_forth
+    
+    # bindsym $mod+u workspace prev
+    # bindsym $mod+o workspace next
+    bindsym $mod+d workspace prev
+    bindsym $mod+f workspace next
+
+    # Move workspace to another monitor
+    bindsym $mod+Shift+F9 move workspace to output left
+    bindsym $mod+Shift+F10 move workspace to output right
+    
+# Commands to control i3                
+    # reload the configuration file
+    bindsym $mod+c reload
+    # restart i3 inplace
+    bindsym $mod+Shift+C restart
+    # exit i3 (logs you out of your X session)
+    bindsym $mod+Shift+F12 exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# Config of i3bar
+    bar {
+        position top	
+        status_command i3status
+        colors {
+            background #833700
+            statusline #eee8d5
+            focused_workspace #992F00 #992F00 #FFEDE6 
+            active_workspace #119F00 #119F00 #eee8d5
+            inactive_workspace #B37C00 #B37C00 #FFECBF
+        }
+    }
+
+# Apps at startup
+    exec xcompmgr -n
+    exec --no-startup-id easystroke
+    exec --no-startup-id onboard 
+    #exec --no-startup-id fbxkb
+    exec feh --image-bg black --bg-center `/home/krvkir/opt/getrandwallp.py`
+    exec conky -d
+    exec --no-startup-id wbar
+    #exec /usr/share/magick-rotation/magick-rotation
+    exec i3-sensible-terminal
+    exec emacs
+   
+# Apps windows configuration 
+    # Size for on-screen keyboard
+    floating_minimum_size 100 x 100
+    #floating_maximum_size 750 x 750
+    for_window [class="Onboard"] floating enable
+    for_window [class="Onboard"] floating_maximum_size 750 x 300
+
+    for_window [title="Figure [0-9]+"] floating enable
+    
+    for_window [class="Gnome-alsamixer"] floating enable
+    for_window [class="Gnome-alsamixer"] floating_maximum_size 400 x 300
+    
+    for_window [class="Nautilus"] floating enable
+    for_window [class="Nautilus"] floating_maximum_size 750 x 750
+
+    assign [class="Deadbeef"] 1
+    assign [class="Skype"] 1
+    assign [class="Pidgin"] 1
+    assign [class="Firefox" instance="Navigator"] 10
+    # assign [class="Cr3"] 3
+
+# Color scheme: 	    class   border  backgr. text    indicator
+    client.focused  	    #992D00 #992d00 #FFEDE6 	    #992D00
+    client.focused_inactive #BF7C60 #BF7C60 #E6D5CF 	    #CFE6E0
+    client.unfocused  	    #BF7C60 #BF7C60 #E6D5CF 	    #CFE6E0
