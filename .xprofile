@@ -1,1 +1,22 @@
-/home/krvkir/.xprofile
+# Джойстик-листалка на ободе экрана
+setkeycodes e006 104
+setkeycodes e007 109
+
+# Эмуляция колёсика по правой кнопке (правая кнопка тоже работает!!!)
+xinput --set-int-prop "PS/2 Generic Mouse" "Evdev Wheel Emulation" 8 1
+xinput --set-int-prop "PS/2 Generic Mouse" "Evdev Wheel Emulation Button" 8 3
+# Эмуляция клика колёсиком по клику обеими клавишами тачпэда
+xinput --set-int-prop "SynPS/2 Synaptics TouchPad" "Evdev Middle Button Emulation" 8 1
+
+# Переключение раскладки по вин-кнопке
+setxkbmap -layout "us,ru" -option "grp:lwin_toggle,grp_led:scroll,caps:hyper"
+
+# Docear fix
+export _JAVA_AWT_WM_NONREPARENTING=1 
+
+# Editor
+# export EDITOR="emacsclient -c"
+# export VISUAL="emacsclient -c"
+export VISUAL="vim"
+
+xrdb ~/.Xresources
