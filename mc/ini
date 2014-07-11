@@ -5,8 +5,8 @@ shell_patterns=1
 auto_save_setup=1
 preallocate_space=0
 auto_menu=0
-use_internal_view=1
-use_internal_edit=1
+use_internal_view=0
+use_internal_edit=0
 clear_before_exec=1
 confirm_delete=1
 confirm_overwrite=1
@@ -83,6 +83,9 @@ skin=xoria256
 
 filepos_max_saved_entries=1024
 
+editor_drop_selection_on_copy=1
+editor_stop_format_chars=-+*\\,.;:&>
+
 [Layout]
 message_visible=1
 keybar_visible=1
@@ -93,9 +96,9 @@ menubar_visible=1
 free_space=1
 horizontal_split=0
 vertical_equal=1
-left_panel_size=44
+left_panel_size=136
 horizontal_equal=1
-top_panel_size=19
+top_panel_size=12
 
 [Misc]
 timeformat_recent=%b %e %H:%M
@@ -136,6 +139,21 @@ simple_swap=false
 
 [HotlistConfig]
 expanded_view_of_groups=0
+
+[FindFile]
+file_case_sens=true
+file_shell_pattern=true
+file_find_recurs=true
+file_skip_hidden=false
+file_all_charsets=false
+content_use=true
+content_case_sens=true
+content_regexp=false
+content_first_hit=false
+content_whole_words=false
+content_all_charsets=false
+ignore_dirs_enable=true
+ignore_dirs=
 
 [Panelize]
 Изменённые файлы под контролем git=git ls-files --modified

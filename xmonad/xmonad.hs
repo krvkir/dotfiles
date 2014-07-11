@@ -39,11 +39,12 @@ modm = mod4Mask
  
 myTabConfig = (theme kavonLakeTheme)
     { fontName = "xft:Droid Sans:size=7"
-    , inactiveColor = "#000000"
+    , activeColor = "#839496"
+    , inactiveColor = "#fdf6e3" -- "#000000"
     }
  
 myLayoutHook = onWorkspace "9:im" pidginLayout
-    $ tall ||| Mirror tall ||| myTabbed ||| Grid ||| Full
+    $ tall ||| Mirror tall ||| myTabbed ||| Grid ||| noBorders Full
     where
         myTabbed = tabbed shrinkText myTabConfig
         tall = Tall nmaster delta ratio
@@ -56,22 +57,33 @@ myLayoutHook = onWorkspace "9:im" pidginLayout
 myManageHook = composeAll
     [ className =? "Icedove" --> doShift "8"
     , className =? "Pidgin" --> doShift "9"
+    , className =? "Galculator" --> doFloat
+    , className =? "Figure" --> doFloat
+   -- , className =? "Словарь" --> doFloat
     , isFullscreen --> doFullFloat
     , manageDocks
     ]
     
 myKeys =
-    [ ((modm .|. controlMask, xK_w), spawn "exo-open --launch WebBrowser")
-    , ((modm .|. controlMask, xK_m), spawn "exo-open --launch MailReader")
-    , ((modm .|. controlMask, xK_f), spawn "exo-open --launch FileManager")
-    , ((modm .|. controlMask, xK_p), spawn "pidgin")
+    [ ((modm .|. controlMask, xK_p), spawn "pidgin")
     , ((modm .|. shiftMask, xK_z), spawn "i3lock")
     , ((modm, xK_j), windows W.focusUp)
     , ((modm, xK_k), windows W.focusDown)
     , ((modm .|. shiftMask, xK_j), windows W.swapUp)
     , ((modm .|. shiftMask, xK_k), windows W.swapDown)
 
-    , ((modm, xK_p), toggleWS)
+    , ((modm, xK_p), toggleWS) -- toggle workspaces back and forth
+
+    -- "arrow keys" in ergoemacs-like mode
+    , ((modm, xK_i), windows W.focusUp)
+    , ((modm, xK_k), windows W.focusDown)
+    , ((modm, xK_period), nextWS)
+    , ((modm, xK_comma),  prevWS)
+
+    -- start emacs client
+    -- , ((modm, xK_Return), spawn "emacsclient -c")
+    , ((modm, xK_Return), spawn "urxvt")
+    , ((modm .|. shiftMask, xK_Return), spawn "emacs")
     ]
     ++
     -- Toggle on previous WS when trying to toggle to the current

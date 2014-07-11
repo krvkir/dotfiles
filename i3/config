@@ -21,7 +21,7 @@ floating_modifier $mod
 
 # Apps
     # start dmenu (a program launcher)
-    bindsym $mod+o exec dmenu_run
+    bindsym $mod+x exec dmenu_run
 
     # start a terminal
     bindsym $mod+Return exec i3-sensible-terminal
