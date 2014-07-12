@@ -85,8 +85,14 @@ myKeys =
     , ((modm, xK_k), windows W.focusDown) -- previous window on screen
     , ((modm .|. shiftMask, xK_i), windows W.swapUp)   -- move window up/forward
     , ((modm .|. shiftMask, xK_k), windows W.swapDown) -- move window down/backward
-    , ((modm, xK_j), sendMessage Shrink)  -- shrink active window
-    , ((modm, xK_l), sendMessage Expand)  -- expand active window
+
+    , ((modm, xK_j), windows W.focusUp)   -- next window on screen
+    , ((modm, xK_l), windows W.focusDown) -- previous window on screen
+    , ((modm .|. shiftMask, xK_j), windows W.swapUp)   -- move window up/forward
+    , ((modm .|. shiftMask, xK_l), windows W.swapDown) -- move window down/backward
+
+    , ((modm, xK_comma), sendMessage Shrink)  -- shrink active window
+    , ((modm, xK_period), sendMessage Expand)  -- expand active window
 
     -- start programs
     , ((modm, xK_Return), spawn (XMonad.terminal myConfig))  -- terminal (urxvt?)
