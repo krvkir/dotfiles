@@ -28,7 +28,12 @@ main = xmonad myConfig
 myConfig = xfceConfig
     { modMask = modm
     , workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+                   
     , terminal = "urxvt"
+    
+    -- , editor = "emacs" -- todo: how to add fields to config?
+    -- , editor = "emacsclient -c"
+
     , borderWidth = 1
     , layoutHook = desktopLayoutModifiers $ myLayoutHook
     , manageHook = myManageHook <+> manageHook xfceConfig
@@ -63,29 +68,46 @@ myManageHook = composeAll
     , isFullscreen --> doFullFloat
     , manageDocks
     ]
-    
-myKeys =
-    [ ((modm .|. controlMask, xK_p), spawn "pidgin")
-    , ((modm .|. shiftMask, xK_z), spawn "i3lock")
-    , ((modm, xK_j), windows W.focusUp)
-    , ((modm, xK_k), windows W.focusDown)
-    , ((modm .|. shiftMask, xK_j), windows W.swapUp)
-    , ((modm .|. shiftMask, xK_k), windows W.swapDown)
 
+-- Idea:
+-- 1. hands laying on keyboard in natural position (index fingers on the notches)
+-- 2. left cursor group {e,d,s,f} for screen/workspace movement
+-- 3. right cursor group {i,k,j,l} for movement on current workspace and resizing
+-- Extension of this idea (todo: how? does it make sence?)
+--   use only one cursor group
+--   if no more windows on the workspace -- switch to next
+myKeys =
+    [ ((modm .|. shiftMask, xK_z), spawn "i3lock")
     , ((modm, xK_p), toggleWS) -- toggle workspaces back and forth
 
     -- "arrow keys" in ergoemacs-like mode
-    , ((modm, xK_i), windows W.focusUp)
-    , ((modm, xK_k), windows W.focusDown)
-    , ((modm, xK_period), nextWS)
-    , ((modm, xK_comma),  prevWS)
+    , ((modm, xK_i), windows W.focusUp)   -- next window on screen
+    , ((modm, xK_k), windows W.focusDown) -- previous window on screen
+    , ((modm .|. shiftMask, xK_i), windows W.swapUp)   -- move window up/forward
+    , ((modm .|. shiftMask, xK_k), windows W.swapDown) -- move window down/backward
+    , ((modm, xK_j), sendMessage Shrink)  -- shrink active window
+    , ((modm, xK_l), sendMessage Expand)  -- expand active window
 
-    -- start emacs client
-    -- , ((modm, xK_Return), spawn "emacsclient -c")
-    , ((modm, xK_Return), spawn "urxvt")
-    , ((modm .|. shiftMask, xK_Return), spawn "emacs")
+    -- start programs
+    , ((modm, xK_Return), spawn (XMonad.terminal myConfig))  -- terminal (urxvt?)
+    , ((modm .|. shiftMask, xK_Return), spawn "emacs")       -- editor (emacs?)
+    -- , ((modm .|. shiftMask, xK_Return), spawn (XMonad.editor myConfig)) -- editor (emacs?)
     ]
     ++
     -- Toggle on previous WS when trying to toggle to the current
-    [((modm, k), toggleOrView i)
-    | (i, k) <- zip (XMonad.workspaces myConfig) [xK_1 .. xK_9]]
+    [((modm, key), toggleOrView i)
+    | (key, i) <- zip [xK_1 .. xK_9] (XMonad.workspaces myConfig)]
+    ++
+    -- Switch screens
+    -- (more: http://xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Actions-CycleWS.html#1)
+    -- mod-{e,d}, Switch to previous/next Xinerama screen
+    -- mod-shift-{e,d}, Move client to previous/next Xinerama screen
+    --
+    [((m .|. modm, key), sc >>= screenWorkspace >>= flip whenJust (windows . f))
+    | (key, sc) <- zip [xK_e, xK_d] [(screenBy (-1)),(screenBy 1)]
+    , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    ++
+    -- Toggle between workspaces: 
+    -- mod-{s,f}, Prev/Next
+    [((modm, key), fun)
+    | (key, fun) <- zip [xK_s, xK_f] [prevWS, nextWS]]
