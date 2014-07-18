@@ -77,7 +77,7 @@ myManageHook = composeAll
 --   use only one cursor group
 --   if no more windows on the workspace -- switch to next
 myKeys =
-    [ ((modm .|. shiftMask, xK_z), spawn "i3lock")
+    [ ((modm .|. shiftMask, xK_z), spawn "i3lock -c 000000")
     , ((modm, xK_p), toggleWS) -- toggle workspaces back and forth
 
     -- "arrow keys" in ergoemacs-like mode
@@ -91,6 +91,11 @@ myKeys =
     , ((modm .|. shiftMask, xK_j), windows W.swapUp)   -- move window up/forward
     , ((modm .|. shiftMask, xK_l), windows W.swapDown) -- move window down/backward
 
+    , ((modm, xK_w), windows W.focusUp)   -- next window on screen
+    , ((modm, xK_r), windows W.focusDown) -- previous window on screen
+    , ((modm .|. shiftMask, xK_w), windows W.swapUp)   -- move window up/forward
+    , ((modm .|. shiftMask, xK_r), windows W.swapDown) -- move window down/backward
+      
     , ((modm, xK_comma), sendMessage Shrink)  -- shrink active window
     , ((modm, xK_period), sendMessage Expand)  -- expand active window
 
