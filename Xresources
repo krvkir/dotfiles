@@ -87,8 +87,10 @@ URxvt.letterSpace: -1
 !URxvt.font: -*-*-medium-*-*-*-16-*-*-*-*-*-iso10646-*
 
 URxvt.perl-ext-common: font-size
-URxvt.keysym.C-Up:	perl:font-size:increase
-URxvt.keysym.C-Down:	perl:font-size:decrease
+URxvt.keysym.C-equal:	perl:font-size:increase
+URxvt.keysym.C-minus:	perl:font-size:decrease
+! URxvt.keysym.C-Up:	perl:font-size:increase
+! URxvt.keysym.C-Down:	perl:font-size:decrease
 
 URxvt.scrollstyle: plain
 !URxvt*.transparent: true
