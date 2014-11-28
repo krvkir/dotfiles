@@ -96,9 +96,9 @@ menubar_visible=1
 free_space=1
 horizontal_split=0
 vertical_equal=1
-left_panel_size=136
+left_panel_size=52
 horizontal_equal=1
-top_panel_size=12
+top_panel_size=36
 
 [Misc]
 timeformat_recent=%b %e %H:%M
@@ -136,6 +136,8 @@ torben_fj_mode=false
 quick_search_mode=2
 
 simple_swap=false
+
+select_flags=6
 
 [HotlistConfig]
 expanded_view_of_groups=0

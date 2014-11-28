@@ -1,12 +1,17 @@
 import XMonad
+
 import XMonad.Config.Xfce
 import XMonad.Config.Desktop
+
 import XMonad.Actions.WindowGo
 import XMonad.Actions.CycleWS
+
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.SetWMName
+
 import XMonad.Layout.Grid
 import XMonad.Layout.Tabbed
 import XMonad.Layout.NoBorders
@@ -15,9 +20,12 @@ import XMonad.Layout.IM
 import XMonad.Layout.Spacing
 import XMonad.Layout.Reflect
 import XMonad.Layout.StackTile
+import XMonad.Layout.ShowWName
+
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Run(spawnPipe, runInTerm)
 import XMonad.Util.Themes
+
 import System.IO
 import qualified XMonad.StackSet as W
 import Data.List
@@ -34,22 +42,48 @@ myConfig = xfceConfig
     -- , editor = "emacs" -- todo: how to add fields to config?
     -- , editor = "emacsclient -c"
 
-    , borderWidth = 1
-    , layoutHook = desktopLayoutModifiers $ myLayoutHook
+    , borderWidth = 3
+                    
+    , normalBorderColor = "#0F5A32"
+    -- , focusedBorderColor = "#551300"
+    , focusedBorderColor = "#802D15"
+                           
+    , layoutHook = desktopLayoutModifiers $ myShowWName myLayoutHook
     , manageHook = myManageHook <+> manageHook xfceConfig
     , handleEventHook = fullscreenEventHook `mappend` handleEventHook xfceConfig
+                        
+    -- fixes java gui issues but possibly breaks gtk3 one 
+    -- , startupHook = setWMName "LG3D" 
     } `additionalKeys` myKeys
  
 modm = mod4Mask
- 
-myTabConfig = (theme kavonLakeTheme)
+
+mySWNConfig = defaultSWNConfig {
+  swn_font = "xft:Droid Sans:size=96"
+  }
+
+myShowWName = showWName' mySWNConfig
+            
+myTabConfig = defaultTheme -- (theme kavonLakeTheme)
     { fontName = "xft:Droid Sans:size=7"
-    , activeColor = "#839496"
-    , inactiveColor = "#fdf6e3" -- "#000000"
+
+    , activeColor = "#551300"
+    , activeTextColor = "#FFBDAA"
+                        
+    , inactiveColor = "#78B494"
+    , inactiveTextColor = "#552F00"
+                          
+    -- , activeBorderColor = "#551300"
+    , activeBorderColor = "#802D15"
+
+    , inactiveBorderColor = "#0F5A32"
+
+    -- , windowTitleIcons = []
+    -- , windowTitleIcons = []
     }
- 
+
 myLayoutHook = onWorkspace "9:im" pidginLayout
-    $ tall ||| Mirror tall ||| myTabbed ||| Grid ||| noBorders Full
+    $ myTabbed ||| tall ||| Mirror tall ||| Grid ||| noBorders Full
     where
         myTabbed = tabbed shrinkText myTabConfig
         tall = Tall nmaster delta ratio
@@ -58,7 +92,7 @@ myLayoutHook = onWorkspace "9:im" pidginLayout
         ratio = 0.5
         pidginLayout = withIM (18/100) (Role "buddy_list") Grid ||| myTabbed
         gridLayout = spacing 8 $ Grid
- 
+
 myManageHook = composeAll
     [ className =? "Icedove" --> doShift "8"
     , className =? "Pidgin" --> doShift "9"
@@ -79,8 +113,10 @@ myManageHook = composeAll
 myKeys =
     [ ((modm .|. shiftMask, xK_z), spawn "i3lock -c 000000")
     , ((modm, xK_p), toggleWS) -- toggle workspaces back and forth
+    , ((modm, xK_a), toggleWS) -- toggle workspace back and forth (single hand)
 
     -- "arrow keys" in ergoemacs-like mode
+    -- Right hand side (ijkl)
     , ((modm, xK_i), windows W.focusUp)   -- next window on screen
     , ((modm, xK_k), windows W.focusDown) -- previous window on screen
     , ((modm .|. shiftMask, xK_i), windows W.swapUp)   -- move window up/forward
@@ -91,17 +127,19 @@ myKeys =
     , ((modm .|. shiftMask, xK_j), windows W.swapUp)   -- move window up/forward
     , ((modm .|. shiftMask, xK_l), windows W.swapDown) -- move window down/backward
 
-    , ((modm, xK_w), windows W.focusUp)   -- next window on screen
-    , ((modm, xK_r), windows W.focusDown) -- previous window on screen
-    , ((modm .|. shiftMask, xK_w), windows W.swapUp)   -- move window up/forward
-    , ((modm .|. shiftMask, xK_r), windows W.swapDown) -- move window down/backward
-      
+    -- Left hand side (esdf)
+    , ((modm, xK_s), windows W.focusUp)   -- next window on screen
+    , ((modm, xK_f), windows W.focusDown) -- previous window on screen
+    , ((modm .|. shiftMask, xK_s), windows W.swapUp)   -- move window up/forward
+    , ((modm .|. shiftMask, xK_f), windows W.swapDown) -- move window down/backward
+
+    -- 
     , ((modm, xK_comma), sendMessage Shrink)  -- shrink active window
     , ((modm, xK_period), sendMessage Expand)  -- expand active window
 
     -- start programs
     , ((modm, xK_Return), spawn (XMonad.terminal myConfig))  -- terminal (urxvt?)
-    , ((modm .|. shiftMask, xK_Return), spawn "emacs")       -- editor (emacs?)
+    , ((modm .|. shiftMask, xK_Return), spawn "emacsclient -c")       -- editor (emacs?)
     -- , ((modm .|. shiftMask, xK_Return), spawn (XMonad.editor myConfig)) -- editor (emacs?)
     ]
     ++
@@ -112,13 +150,13 @@ myKeys =
     -- Switch screens
     -- (more: http://xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Actions-CycleWS.html#1)
     -- mod-{e,d}, Switch to previous/next Xinerama screen
-    -- mod-shift-{e,d}, Move client to previous/next Xinerama screen
+    -- mod-shift-{'{','}'}, Move client to previous/next Xinerama screen
     --
     [((m .|. modm, key), sc >>= screenWorkspace >>= flip whenJust (windows . f))
-    | (key, sc) <- zip [xK_e, xK_d] [(screenBy (-1)),(screenBy 1)]
+    | (key, sc) <- zip [xK_braceleft, xK_braceright] [(screenBy (-1)),(screenBy 1)]
     , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
     ++
     -- Toggle between workspaces: 
-    -- mod-{s,f}, Prev/Next
+    -- mod-{e,d}, Prev/Next
     [((modm, key), fun)
-    | (key, fun) <- zip [xK_s, xK_f] [prevWS, nextWS]]
+    | (key, fun) <- zip [xK_e, xK_d] [prevWS, nextWS]]

@@ -89,7 +89,7 @@ PutOtherLink = ctrl-r
 ################################################################################
 [panel]
 
-Search                  = ctrl-f
+Search                  = ctrl-f; alt-y
 Mark                    = insert; ctrl-t
 MarkUp                  = shift-up
 MarkDown                = shift-down
@@ -221,7 +221,7 @@ Bottom                  = end; alt-gt; c1
 PageUp                  = pgup; alt-v
 PageDown                = pgdn; ctrl-v
 Enter                   = enter
-Search                  = ctrl-s
+Search                  = ctrl-f; alt-y
 Delete                  = f8; delete
 
 
@@ -415,8 +415,8 @@ Top = home; ctrl-home; ctrl-pgup; a1; alt-lt; g
 Bottom = end; ctrl-end; ctrl-pgdn; c1; alt-gt; shift-g
 BookmarkGoto = m
 Bookmark = r
-# FileNext = ctrl-f
-# FilePrev = ctrl-b
+# FileNext = ctrl-f; alt-y
+# FilePrev = ctrl-b; alt-shift-y
 SelectCodepage = alt-e
 Shell = ctrl-o
 Ruler = alt-r
