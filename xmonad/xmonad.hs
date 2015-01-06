@@ -48,7 +48,8 @@ myConfig = xfceConfig
     -- , focusedBorderColor = "#551300"
     , focusedBorderColor = "#802D15"
                            
-    , layoutHook = desktopLayoutModifiers $ myShowWName myLayoutHook
+    -- , layoutHook = desktopLayoutModifiers $ myShowWName myLayoutHook
+    , layoutHook = desktopLayoutModifiers $ myLayoutHook
     , manageHook = myManageHook <+> manageHook xfceConfig
     , handleEventHook = fullscreenEventHook `mappend` handleEventHook xfceConfig
                         
@@ -59,7 +60,9 @@ myConfig = xfceConfig
 modm = mod4Mask
 
 mySWNConfig = defaultSWNConfig {
-  swn_font = "xft:Droid Sans:size=96"
+  swn_font = "xft:Droid Sans:size=96",
+  swn_fade = 1
+             
   }
 
 myShowWName = showWName' mySWNConfig
@@ -117,15 +120,15 @@ myKeys =
 
     -- "arrow keys" in ergoemacs-like mode
     -- Right hand side (ijkl)
-    , ((modm, xK_i), windows W.focusUp)   -- next window on screen
-    , ((modm, xK_k), windows W.focusDown) -- previous window on screen
-    , ((modm .|. shiftMask, xK_i), windows W.swapUp)   -- move window up/forward
-    , ((modm .|. shiftMask, xK_k), windows W.swapDown) -- move window down/backward
-
     , ((modm, xK_j), windows W.focusUp)   -- next window on screen
     , ((modm, xK_l), windows W.focusDown) -- previous window on screen
     , ((modm .|. shiftMask, xK_j), windows W.swapUp)   -- move window up/forward
     , ((modm .|. shiftMask, xK_l), windows W.swapDown) -- move window down/backward
+
+    , ((modm, xK_i), prevWS) -- next workspace
+    , ((modm, xK_k), nextWS) -- previous workspace
+    -- , ((modm .|. shiftMask, xK_i), windows W.swapUp)   -- move window to next workspace
+    -- , ((modm .|. shiftMask, xK_k), windows W.swapDown) -- move window to previous workspace
 
     -- Left hand side (esdf)
     , ((modm, xK_s), windows W.focusUp)   -- next window on screen
