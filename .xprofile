@@ -1,25 +1,28 @@
 #!/bin/bash
 
+# X Input Method
+# source: http://paul.elms.pro/blog/2013/04/11/pieriekliuchieniie-raskladok-v-emacs/
+# GTK_IM_MODULE='xim'; export GTK_IM_MODULE
+# QT_IM_MODULE='xim'; export QT_IM_MODULE
+# uim-xim &
+# XMODIFIERS='@im=uim'; export XMODIFIERS
+# fcitx -d
+# ibus-daemon -d -x
+# scim -d
+
 # Джойстик-листалка на ободе экрана
 setkeycodes e006 104
 setkeycodes e007 109
 
-# Ещё кнопки
-xmodmap ~/.xmodmap
+# set up all keyboard options
+upkb
+# start keyboard layout indicator
+fbxkb &
 
-# Эмуляция колёсика по правой кнопке (правая кнопка тоже работает!!!)
-xinput set-prop "PS/2 Generic Mouse" "Evdev Wheel Emulation" 1
-xinput set-prop "PS/2 Generic Mouse" "Evdev Wheel Emulation Button" 3
-# Эмуляция клика колёсиком по клику обеими клавишами тачпэда
-xinput set-prop "SynPS/2 Synaptics TouchPad" "Evdev Middle Button Emulation" 1
-xinput set-prop "SynPS/2 Synaptics TouchPad" "Evdev Middle Button Timeout" 50
+# xsetwacom set "Wacom Serial Penabled 2FG Touchscreen touch" Gesture 'off'
 
 # Клавиши
 xbindkeys
-
-# Переключение раскладки по вин-кнопке
-setxkbmap -option "caps:hyper"
-#setxkbmap -layout "us,ru" -option "grp:lwin_toggle,grp_led:scroll"
 
 # Docear fix
 export _JAVA_AWT_WM_NONREPARENTING=1 
@@ -35,22 +38,6 @@ export VISUAL="emacsclient -c"
 
 xrdb ~/.Xresources
 
-# Second monitor
-IN="LVDS1"
-EXT="VGA1"
+# Extrenal monitor detection
+# test `ps x | grep togglevga | wc -l` == 1 && togglevga > /dev/null &
 
-xrandr --newmode 1080p21 178.72  1920 2040 2248 2576  1080 1081 1084 1119  -HSync +Vsync
-xrandr --addmode $EXT 1080p21
-
-if (xrandr | grep "$EXT connected"); then
-   xrandr --output $IN --pos 0x0 --output $EXT --mode 1080p21 --pos 0x800 --primary
-fi
-
-# Rotation button
-
-# SCIM (Input method)
-# source: http://paul.elms.pro/blog/2013/04/11/pieriekliuchieniie-raskladok-v-emacs/
-export XMODIFIERS=@im=SCIM
-export GTK_IM_MODULE="scim"
-export QT_IM_MODULE="scim"
-scim -d
